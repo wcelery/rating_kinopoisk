@@ -27,7 +27,10 @@ class KinopoiskSpider(scrapy.Spider):
         decoded = base64.b64decode(encoded)
         xored = ''.join([chr(b ^ ord(base[index % len(base)])) for index, b in enumerate(decoded)])
         result = re.findall('\'(\d+)', unquote(xored))
-        return result[0]
+        if len(result) > 1:
+             return [result[0]]
+        else:
+             return [['0']]
 
     def start_requests(self):
         url = self.BASE_URL.format(user_id=self.user_id, items_per_page=self.ITEMS_PER_PAGE)
@@ -36,7 +39,7 @@ class KinopoiskSpider(scrapy.Spider):
     def parse_list(self, response):
         count = int(response.css('table.fontsize10 tr:first-child td')[2].root.text)
         for page in range(1, count // self.ITEMS_PER_PAGE + 2):
-            url = self.PAGES.format(user_id=self.user_id, page_no=page)
+            url = self.PAGES.format(user_id=self.user_id, page_no=1)
             yield scrapy.Request(url=url, callback=self.parse_page, cookies=self.COOKIES)
 
     def parse_page(self, response):
