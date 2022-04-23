@@ -12,6 +12,10 @@ $ scrapy genspider kinopoisk www.kinopoisk.ru
 # Configure
 
 Setup cookie `ya_sess_id` in `scraper.spiders.KinopoiskSpider.COOKIES`.
+You have to specify the page in ./spiders/kinopoisk.py:45, lazy to fix
+```python
+url = self.PAGES.format(user_id=self.user_id, page_no=<your_number>)
+```
 
 # Run
 
